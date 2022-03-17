@@ -1,0 +1,19 @@
+[sources.generate_syslog]
+type = "demo_logs"
+format = "syslog"
+count = 3
+
+[transforms.remap_syslog]
+inputs = [ "generate_syslog"]
+type = "remap"
+source = '''
+  structured = parse_syslog!(.message)
+  . = merge(., structured)
+'''
+
+[sinks.emit_syslog]
+inputs = ["remap_syslog"]
+#inputs = ["generate_syslog"]
+type = "console"
+encoding.codec = "json"
+#encoding.codec = "text"
