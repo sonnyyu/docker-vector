@@ -1,0 +1,30 @@
+[sources.my_source_id]
+#encoding.codec = "json"
+type = "kafka"
+group_id = "consumer-group-name"
+bootstrap_servers = "192.168.1.207:9092"
+key_field = "procid"
+#topics = [ "^(topic|prefix2)-.+" ]
+topics = ["topic-1234"]
+#topics = ["^(prefix1|prefix2)-.+", "topic-1234"]
+
+
+[sinks.emit_syslog]
+inputs = ["my_source_id"]
+#inputs = ["generate_syslog"]
+type = "console"
+encoding.codec = "json"
+#encoding.codec = "text"
+
+
+[sinks.my_sink_loki_id]
+#encoding.codec = "json"
+encoding.codec = "text"
+type = "loki"
+inputs = [ "my_source_id" ]
+endpoint = "http://192.168.1.206:3100"
+# Labels
+labels.key = "value" # example
+labels.key = "{{ event_field }}" # example
+compression = "none"
+

@@ -1,0 +1,34 @@
+[sources.my_source_id]
+#encoding.codec = "json"
+type = "kafka"
+group_id = "consumer-group-name"
+bootstrap_servers = "192.168.1.207:9092"
+key_field = "procid"
+#topics = [ "^(topic|prefix2)-.+" ]
+topics = ["topic-1234"]
+#topics = ["^(prefix1|prefix2)-.+", "topic-1234"]
+
+
+[sinks.emit_syslog]
+inputs = ["my_source_id"]
+#inputs = ["generate_syslog"]
+type = "console"
+#encoding.codec = "json"
+encoding.codec = "text"
+
+
+[sinks.elastic]
+encoding.codec = "text"
+type = "elasticsearch" # required
+inputs = ["my_source_id"] # required
+#compression = "gzip" # optional, default is none
+#healthcheck = true # required
+#host = "http://192.168.1.205:9200" # required
+doc_type = "_doc"
+endpoint = "http://192.168.1.205:9200"
+mode = "bulk"
+bulk.index = "single_index" # required
+auth.strategy = "basic"
+auth.user = "elastic"
+auth.password = "changeme"
+

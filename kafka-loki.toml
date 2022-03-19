@@ -1,0 +1,42 @@
+[sources.generate_syslog]
+type = "demo_logs"
+format = "syslog"
+count = 3
+
+
+[transforms.remap_syslog]
+inputs = [ "generate_syslog"]
+type = "remap"
+source = '''
+  structured = parse_syslog!(.message)
+  . = merge(., structured)
+'''
+
+[sinks.emit_syslog]
+inputs = ["remap_syslog"]
+#inputs = ["generate_syslog"]
+type = "console"
+encoding.codec = "json"
+#encoding.codec = "text"
+
+
+[sinks.my_sink_id]
+encoding.codec = "json"
+type = "kafka"
+inputs = [ "remap_syslog" ]
+bootstrap_servers = "192.168.1.207:9092"
+key_field = "procid"
+topic = "topic-1234"
+compression = "none"
+
+
+[sinks.my_sink_loki_id]
+encoding.codec = "json"
+type = "loki"
+inputs = [ "remap_syslog" ]
+endpoint = "http://192.168.1.206:3100"
+# Labels
+labels.key = "value" # example
+labels.key = "{{ event_field }}" # example
+compression = "none"
+
