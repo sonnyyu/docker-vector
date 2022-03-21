@@ -1,7 +1,7 @@
 [sources.generate_syslog]
 type = "demo_logs"
 format = "syslog"
-count = 20
+count = 200
 #encoding.codec = "text"
 #encoding.codec = "json"
 

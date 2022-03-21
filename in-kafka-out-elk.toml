@@ -18,14 +18,15 @@ encoding.codec = "text"
 
 
 [sinks.elastic]
-encoding.codec = "text"
+encoding.codec = "json"
 type = "elasticsearch" # required
 inputs = ["my_source_id"] # required
 #compression = "gzip" # optional, default is none
-#healthcheck = true # required
+healthcheck = true # required
 #host = "http://192.168.1.205:9200" # required
-doc_type = "_doc"
-endpoint = "http://192.168.1.205:9200"
+#doc_type = "_doc"
+suppress_type_name = true
+endpoint = "http://192.168.1.205:9200/single_index"
 mode = "bulk"
 bulk.index = "single_index" # required
 auth.strategy = "basic"
